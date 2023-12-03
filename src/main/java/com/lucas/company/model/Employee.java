@@ -2,8 +2,7 @@ package com.lucas.company.model;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,6 +10,10 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+
 @Entity
 @Table(name = "employees")
 public class Employee implements Serializable {
@@ -20,8 +23,13 @@ public class Employee implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @Column(name = "id_employee")
+    private UUID idEmployee;
 
     @Column(name = "employee_name", nullable = false, length = 150)
     private String employeeName;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_department")
+    private Department department;
 }
