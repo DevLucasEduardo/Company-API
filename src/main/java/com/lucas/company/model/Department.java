@@ -28,7 +28,7 @@ public class Department implements Serializable {
     private UUID id;
 
     @Column(name = "department_name", unique = true, nullable = false, length = 150)
-    private String departmentName;
+    private String name;
 
     @OneToMany
     @JoinColumn(name = "fk_department")
