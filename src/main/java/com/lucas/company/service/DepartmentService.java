@@ -18,7 +18,7 @@ public class DepartmentService {
 
     @Autowired
     DepartmentRepository departmentRepository;
-    @Transactional
+
     public ResponseEntity<Object> get(String name) {
         Optional<Department> departmentValidation = departmentRepository.findByName(name);
         if (departmentValidation.isEmpty()) {
@@ -26,7 +26,7 @@ public class DepartmentService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(new DepartmentDTO(departmentValidation.get()));
     }
-    @Transactional
+
     public ResponseEntity<Object> getAll() {
         List<Department> departmentValidation = departmentRepository.findAll();
         if (departmentValidation.isEmpty()) {
