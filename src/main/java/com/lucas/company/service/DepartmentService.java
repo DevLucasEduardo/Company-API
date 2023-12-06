@@ -41,14 +41,14 @@ public class DepartmentService {
         if (departmentValidation.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Department already registered!");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body((new DepartmentDTO(departmentRepository.save(department))));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new DepartmentDTO(departmentRepository.save(department)));
     }
     @Transactional
     public ResponseEntity<Object> put(DepartmentDTO departmentDTO) {
         var department = converterDTO(departmentDTO);
         var departmentValidation = departmentRepository.findByName(department.getName());
         if (departmentValidation.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body((new DepartmentDTO(departmentRepository.save(department))));
+            return ResponseEntity.status(HttpStatus.OK).body(new DepartmentDTO(departmentRepository.save(department)));
 
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Department wasn't found");
