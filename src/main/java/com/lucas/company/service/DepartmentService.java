@@ -54,11 +54,11 @@ public class DepartmentService {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Department wasn't found");
     }
     @Transactional
-    public ResponseEntity<Object> delete(DepartmentDTO departmentDTO) {
+    public ResponseEntity<Object> delete(Long id) {
         var department = converterDTO(departmentDTO);
         var departmentValidation = departmentRepository.findByName(department.getName());
-        departmentRepository.delete(department);
         if (departmentValidation.isPresent()) {
+            departmentRepository.delete(department);
             return ResponseEntity.status(HttpStatus.OK).body("Deleted!");
 
         }

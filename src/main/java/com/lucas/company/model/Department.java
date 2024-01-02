@@ -1,11 +1,13 @@
 package com.lucas.company.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,20 +19,16 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "departments")
-public class Department implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Department {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_department")
-    private UUID id;
+    private Long id;
 
-    @Column(name = "department_name", unique = true, nullable = false, length = 150)
+    @Column(name = "name_department", unique = true, nullable = false, length = 150)
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "fk_department")
-    private List<Employee> employees;
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<Employee> employees = new ArrayList<>();
 }

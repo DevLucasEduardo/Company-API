@@ -33,8 +33,8 @@ public class DepartmentController {
         return departmentService.put(departmentDTO);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Object> deleteDepartment(@RequestBody DepartmentDTO departmentDTO) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteDepartment(@PathVariable Long id) {
         return departmentService.delete(departmentDTO);
     }
 
