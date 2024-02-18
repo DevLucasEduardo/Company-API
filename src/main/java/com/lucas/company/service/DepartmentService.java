@@ -38,8 +38,8 @@ public class DepartmentService {
     @Transactional
     public ResponseEntity<Object> post(DepartmentDTO departmentDTO) {
         var department = converterDTO(departmentDTO);
-        var nameVerifier = departmentRepository.findByName(department.getName());
-        if (nameVerifier.isPresent()) {
+        var departmentVerifier = departmentRepository.findByName(department.getName());
+        if (departmentVerifier.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("This name has already been used!");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(new DepartmentDTO(departmentRepository.save(department)));
@@ -47,18 +47,18 @@ public class DepartmentService {
     @Transactional
     public ResponseEntity<Object> put(DepartmentDTO departmentDTO) {
         var department = converterDTO(departmentDTO);
-        var departmentValidation = departmentRepository.findById(department.getId());
-        if (departmentValidation.isPresent()) {
+        var departmentVerifier = departmentRepository.findById(department.getId());
+        if (departmentVerifier.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(new DepartmentDTO(departmentRepository.save(department)));
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Department not found!");
     }
     @Transactional
     public ResponseEntity<Object> delete(Long id) {
-        var departmentValidation = departmentRepository.findById(id);
-        if (departmentValidation.isPresent()) {
-            departmentRepository.delete(departmentValidation.get());
-            return ResponseEntity.status(HttpStatus.OK).body("Deleted!");
+        var departmentVerifier = departmentRepository.findById(id);
+        if (departmentVerifier.isPresent()) {
+            departmentRepository.delete(departmentVerifier.get());
+            return ResponseEntity.status(HttpStatus.OK).body("Department deleted!");
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Department not found!");
     }
