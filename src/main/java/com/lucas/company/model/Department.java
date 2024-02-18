@@ -29,6 +29,7 @@ public class Department {
     @Column(name = "name_department", unique = true, nullable = false, length = 150)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<Employee> employees = new ArrayList<>();
 }
