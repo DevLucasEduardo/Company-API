@@ -19,39 +19,39 @@ public class DepartmentService {
     @Autowired
     DepartmentRepository departmentRepository;
 
-    public ResponseEntity<Object> get(String name) {
-        Optional<Department> departmentValidation = departmentRepository.findByName(name);
-        if (departmentValidation.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found!");
+    public ResponseEntity<Object> get(Long id) {
+        Optional<Department> departmentVerifier = departmentRepository.findById(id);
+        if (departmentVerifier.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Department not found!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new DepartmentDTO(departmentValidation.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(new DepartmentDTO(departmentVerifier.get()));
     }
 
     public ResponseEntity<Object> getAll() {
-        List<Department> departmentValidation = departmentRepository.findAll();
-        if (departmentValidation.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found!");
+        List<Department> departmentVerifier = departmentRepository.findAll();
+        if (departmentVerifier.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No departments found!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(departmentValidation.stream().map(DepartmentDTO::new).toList());
+        return ResponseEntity.status(HttpStatus.OK).body(departmentVerifier.stream().map(DepartmentDTO::new).toList());
     }
+
     @Transactional
     public ResponseEntity<Object> post(DepartmentDTO departmentDTO) {
         var department = converterDTO(departmentDTO);
-        var departmentValidation = departmentRepository.findByName(department.getName());
-        if (departmentValidation.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Department already registered!");
+        var nameVerifier = departmentRepository.findByName(department.getName());
+        if (nameVerifier.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("This name has already been used!");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(new DepartmentDTO(departmentRepository.save(department)));
     }
     @Transactional
     public ResponseEntity<Object> put(DepartmentDTO departmentDTO) {
         var department = converterDTO(departmentDTO);
-        var departmentValidation = departmentRepository.findByName(department.getName());
+        var departmentValidation = departmentRepository.findById(department.getId());
         if (departmentValidation.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(new DepartmentDTO(departmentRepository.save(department)));
-
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Department wasn't found");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Department not found!");
     }
     @Transactional
     public ResponseEntity<Object> delete(Long id) {
@@ -60,7 +60,7 @@ public class DepartmentService {
             departmentRepository.delete(departmentValidation.get());
             return ResponseEntity.status(HttpStatus.OK).body("Deleted!");
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Department wasn't found");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Department not found!");
     }
 
     public Department converterDTO(DepartmentDTO departmentDTO) {

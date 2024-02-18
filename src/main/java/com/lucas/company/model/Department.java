@@ -23,10 +23,10 @@ public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_department")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name_department", unique = true, nullable = false, length = 150)
+    @Column(name = "name", unique = true, nullable = false, length = 150)
     private String name;
 
     @JsonIgnore

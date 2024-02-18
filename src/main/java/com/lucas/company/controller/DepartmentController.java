@@ -18,9 +18,9 @@ public class DepartmentController {
         return departmentService.getAll();
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<Object> getDepartment(@PathVariable String name) {
-        return departmentService.get(name);
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getDepartment(@PathVariable Long id) {
+        return departmentService.get(id);
     }
 
     @PostMapping("/")
