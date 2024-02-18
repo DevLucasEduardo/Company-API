@@ -18,9 +18,9 @@ public class EmployeeController {
         return employeeService.getAll();
     }
 
-    @GetMapping("/{cpf}")
-    public ResponseEntity<Object> getEmployee(@PathVariable String cpf) {
-        return employeeService.get(cpf);
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getEmployee(@PathVariable Long id) {
+        return employeeService.get(id);
     }
 
     @PostMapping("/")
@@ -33,9 +33,9 @@ public class EmployeeController {
         return employeeService.put(employeeDTO);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Object> deleteEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        return employeeService.delete(employeeDTO);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteEmployee(@PathVariable Long id) {
+        return employeeService.delete(id);
     }
 
 }

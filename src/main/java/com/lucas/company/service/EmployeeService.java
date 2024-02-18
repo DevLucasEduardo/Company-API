@@ -25,48 +25,57 @@ public class EmployeeService {
     @Autowired
     DepartmentRepository departmentRepository;
 
-    public ResponseEntity<Object> get(String cpf) {
-        Optional<Employee> employeeValidation = employeeRepository.findByCpf(cpf);
-        if (employeeValidation.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found!");
+    public ResponseEntity<Object> get(Long id) {
+        Optional<Employee> employeeVerifier = employeeRepository.findById(id);
+        if (employeeVerifier.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new EmployeeDTO(employeeValidation.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(new EmployeeDTO(employeeVerifier.get()));
     }
     public ResponseEntity<Object> getAll() {
-        List<Employee> employeeValidation = employeeRepository.findAll();
-        if (employeeValidation.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found!");
+        List<Employee> employeeVerifier = employeeRepository.findAll();
+        if (employeeVerifier.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No employees found!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(employeeValidation.stream().map(EmployeeDTO::new).toList());
+        return ResponseEntity.status(HttpStatus.OK).body(employeeVerifier.stream().map(EmployeeDTO::new).toList());
     }
     @Transactional
     public ResponseEntity<Object> post(EmployeeDTO employeeDTO) {
         var employee = converterDTO(employeeDTO);
-        var employeeValidation = employeeRepository.findByCpf(employee.getCpf());
-        if (employeeValidation.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Employee already registered!");
+        var employeeVerifier = employeeRepository.findByCpf(employee.getCpf());
+        var departmentVerifier = departmentRepository.findById(employee.getDepartment().getId());
+
+        if (employeeVerifier.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("This CPF has already been used!");
+        }
+        if(departmentVerifier.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The department's id doesn't exist!");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(new EmployeeDTO(employeeRepository.save(employee)));
     }
     @Transactional
     public ResponseEntity<Object> put(EmployeeDTO employeeDTO) {
         var employee = converterDTO(employeeDTO);
-        var employeeValidation = employeeRepository.findByCpf(employee.getCpf());
-        if (employeeValidation.isPresent()) {
+        var employeeVerifier = employeeRepository.findById(employee.getId());
+        var departmentVerifier = departmentRepository.findById(employee.getDepartment().getId());
+
+        if (departmentVerifier.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Department hasn't been registered!");
+        }
+        if (employeeVerifier.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(new EmployeeDTO(employeeRepository.save(employee)));
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Employee wasn't found");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Employee not found");
     }
     @Transactional
-    public ResponseEntity<Object> delete(EmployeeDTO employeeDTO) {
-        var employee = converterDTO(employeeDTO);
-        var employeeValidation = employeeRepository.findByCpf(employee.getCpf());
-        if (employeeValidation.isPresent()) {
-            employeeRepository.delete(employee);
-            return ResponseEntity.status(HttpStatus.OK).body("Deleted!");
+    public ResponseEntity<Object> delete(Long id) {
+        var employeeVerifier = employeeRepository.findById(id);
+        if (employeeVerifier.isPresent()) {
+            employeeRepository.delete(employeeVerifier.get());
+            return ResponseEntity.status(HttpStatus.OK).body("Employee deleted!");
 
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Employee wasn't found");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Employee not found!");
     }
     public Employee converterDTO(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();

@@ -25,22 +25,22 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_employee")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name_employee", nullable = false, length = 150)
+    @Column(name = "name", nullable = false, length = 150)
     private String name;
 
-    @Column(name = "cpf_employee", nullable = false, unique = true, length = 30)
+    @Column(name = "cpf", nullable = false, unique = true, length = 30)
     private String cpf;
 
-    @Column(name = "birth_date_employee", nullable = false)
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = "civil_status_employee", nullable = false, length = 30)
+    @Column(name = "civil_status", nullable = false, length = 30)
     private String civilStatus;
 
     @ManyToOne
-    @JoinColumn(name = "fk_department")
+    @JoinColumn(name = "id_department", nullable = false)
     private Department department;
 }
