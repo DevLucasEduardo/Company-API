@@ -54,7 +54,7 @@ class EmployeeServiceTest {
 
     @Test
     @DisplayName("Should create a new employee")
-    void post() {
+    void postCaseCorrect() {
 
         // Arrange
         Employee employee = employeeService.converterDTO(employeeDTO);
@@ -76,14 +76,74 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should not create a new employee")
+    void postCaseNotCorrectCpfExists() {
+
+        // Arrange
+        Employee employee = employeeService.converterDTO(employeeDTO);
+        when(employeeRepository.findByCpf(employee.getCpf())).thenReturn(Optional.of(employee));
+        when(departmentRepository.findById(department.getId())).thenReturn(Optional.of(department));
+        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body("This CPF has already been used!");
+
+        // Act
+        ResponseEntity<Object> methodResult = employeeService.post(employeeDTO);
+
+        // Assert
+        Assertions.assertEquals(methodResult, actualResult);
+        verify(employeeRepository, times(1)).findByCpf(any());
+        verify(departmentRepository, times(1)).findById(any());
+
+    }
+
+    @Test
+    @DisplayName("Should not create a new employee")
+    void postCaseNotCorrectDepartmentNotFound() {
+
+        // Arrange
+        Employee employee = employeeService.converterDTO(employeeDTO);
+        when(employeeRepository.findByCpf(employee.getCpf())).thenReturn(Optional.empty());
+        when(departmentRepository.findById(department.getId())).thenReturn(Optional.empty());
+        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body("The department's id doesn't exist!");
+        // Act
+        ResponseEntity<Object> methodResult = employeeService.post(employeeDTO);
+
+        // Assert
+        Assertions.assertEquals(methodResult, actualResult);
+        verify(employeeRepository, times(1)).findByCpf(any());
+        verify(departmentRepository, times(1)).findById(any());
+
+    }
+
+    @Test
     void put() {
     }
 
     @Test
-    void delete() {
+    void deleteCaseCorrect() {
+        // Arrange
+        Employee employee = employeeService.converterDTO(employeeDTO);
+        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.of(employee));
+        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.OK).body("Employee deleted!");
+        // Act
+        ResponseEntity<Object> methodResult = employeeService.delete(employee.getId());
+
+        // Assert
+        Assertions.assertEquals(methodResult, actualResult);
+        verify(employeeRepository, times(1)).findById(any());
     }
 
     @Test
-    void converterDTO() {
+    void deleteCaseNotCorrect() {
+        // Arrange
+        Employee employee = employeeService.converterDTO(employeeDTO);
+        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.empty());
+        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body("Employee not found!");
+        // Act
+        ResponseEntity<Object> methodResult = employeeService.delete(employee.getId());
+
+        // Assert
+        Assertions.assertEquals(methodResult, actualResult);
+        verify(employeeRepository, times(1)).findById(any());
     }
+
 }
