@@ -1,7 +1,6 @@
 package com.lucas.company.service;
 
 
-import com.lucas.company.model.Department;
 import com.lucas.company.model.Employee;
 import com.lucas.company.model.EmployeeDTO;
 import com.lucas.company.repository.DepartmentRepository;
@@ -60,7 +59,7 @@ public class EmployeeService {
         var departmentVerifier = departmentRepository.findById(employee.getDepartment().getId());
 
         if (departmentVerifier.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Department hasn't been registered!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The department's id doesn't exist!");
         }
         if (employeeVerifier.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(new EmployeeDTO(employeeRepository.save(employee)));

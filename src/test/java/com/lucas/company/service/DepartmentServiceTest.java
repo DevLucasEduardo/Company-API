@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -36,11 +35,13 @@ class DepartmentServiceTest{
     DepartmentService departmentService;
 
     DepartmentDTO departmentDTO;
+    Department department;
 
     @BeforeEach
     public void setUp() {
         List<Employee> employeeList = new ArrayList<>();
-        departmentDTO = new DepartmentDTO(UUID.randomUUID(), "Supply", employeeList);
+        departmentDTO = new DepartmentDTO(1L, "IT", employeeList);
+        department = new Department(1L, "IT", employeeList);
     }
 
     @Test
@@ -67,7 +68,7 @@ class DepartmentServiceTest{
         when(departmentRepository.findByName(department.getName())).thenReturn(Optional.of(department));
 
         ResponseEntity<Object> methodResult = departmentService.post(departmentDTO);
-        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body(("Department already registered!"));
+        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body(("This name has already been used!"));
         Assertions.assertEquals(methodResult, actualResult);
         verify(departmentRepository, times(1)).findByName(any());
     }
@@ -76,52 +77,51 @@ class DepartmentServiceTest{
     @DisplayName("Should update department because the department name has been found.")
     void putCaseCorrect() {
         Department department = departmentService.converterDTO(departmentDTO);
-        when(departmentRepository.findByName(department.getName())).thenReturn(Optional.of(department));
+        when(departmentRepository.findById(department.getId())).thenReturn(Optional.of(department));
         when(departmentRepository.save(department)).thenReturn(department);
 
         ResponseEntity<Object> methodResult = departmentService.put(departmentDTO);
         ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.OK).body(new DepartmentDTO(department));
+
         Assertions.assertEquals(methodResult, actualResult);
-        verify(departmentRepository, times(1)).findByName(any());
+        verify(departmentRepository, times(1)).findById(any());
     }
 
     @Test
     @DisplayName("Should not put a new department because the department name hasn't been found.")
     void putCaseNotCorrect() {
         Department department = departmentService.converterDTO(departmentDTO);
-        when(departmentRepository.findByName(department.getName())).thenReturn(Optional.empty());
+        when(departmentRepository.findById(department.getId())).thenReturn(Optional.empty());
 
         ResponseEntity<Object> methodResult = departmentService.put(departmentDTO);
-        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body("Department wasn't found");
+        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body("Department not found!");
         Assertions.assertEquals(methodResult, actualResult);
-        verify(departmentRepository, times(1)).findByName(any());
+        verify(departmentRepository, times(1)).findById(any());
     }
 
     @Test
-    @DisplayName("Should not delete a new department because the department name has been used.")
+    @DisplayName("Should delete a department.")
     void deleteCaseCorrect() {
-        Department department = departmentService.converterDTO(departmentDTO);
-        when(departmentRepository.findByName(department.getName())).thenReturn(Optional.of(department));
+        var id = department.getId();
+        when(departmentRepository.findById(id)).thenReturn(Optional.of(department));
 
-        ResponseEntity<Object> methodResult = departmentService.delete(departmentDTO);
-        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.OK).body(("Deleted!"));
+        ResponseEntity<Object> methodResult = ResponseEntity.status(HttpStatus.OK).body("Department deleted!");
+        ResponseEntity<Object> actualResult = departmentService.delete(id);
+
         Assertions.assertEquals(methodResult, actualResult);
-        verify(departmentRepository, times(1)).findByName(any());
+        verify(departmentRepository, times(1)).findById(id);
     }
 
     @Test
-    @DisplayName("Should not delete a new department because the department name has been used.")
+    @DisplayName("Should not delete a department because the id wasn't found")
     void deleteCaseNotCorrect() {
-        Department department = departmentService.converterDTO(departmentDTO);
-        when(departmentRepository.findByName(department.getName())).thenReturn(Optional.empty());
+        var id = department.getId();
+        when(departmentRepository.findById(id)).thenReturn(Optional.empty());
 
-        ResponseEntity<Object> methodResult = departmentService.delete(departmentDTO);
-        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body(("Department wasn't found"));
+        ResponseEntity<Object> methodResult = departmentService.delete(id);
+        ResponseEntity<Object> actualResult = ResponseEntity.status(HttpStatus.CONFLICT).body("Department not found!");
         Assertions.assertEquals(methodResult, actualResult);
-        verify(departmentRepository, times(1)).findByName(any());
+        verify(departmentRepository, times(1)).findById(id);
     }
-
-
-
 
 }
