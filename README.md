@@ -1,7 +1,5 @@
 # Company-System
 
-# Company Project
-
 Introduction
 This project is a RESTful API that is responsible for creating CRUD transactions.
 It uses Java and Spring boot, JPA for managing and persisting data, MySQL as the database, Swagger for the documentation of the methods and finally JUnit and Mockito for Unit tests.
