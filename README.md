@@ -58,6 +58,7 @@ This class contains unit tests for the `EmployeeService` class, covering methods
 - Hibernate: ORM (Object-Relational Mapping) tool for mapping Java objects to database tables.
 - JUnit: Framework for writing and running unit tests.
 - Mockito: Framework for mocking dependencies in unit tests.
+- MySQL: Relational database.
 
 ## Getting Started
 
