@@ -74,7 +74,7 @@ class DepartmentServiceTest{
     }
 
     @Test
-    @DisplayName("Should update department because the department name has been found.")
+    @DisplayName("Should update department.")
     void putCaseCorrect() {
         Department department = departmentService.converterDTO(departmentDTO);
         when(departmentRepository.findById(department.getId())).thenReturn(Optional.of(department));
