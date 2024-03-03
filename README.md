@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project is a RESTful API that is responsible for creating CRUD transactions.
+This project is a RESTful API that is responsible for creating CRUD operations.
 It uses Java and Spring boot, JPA for managing and persisting data, MySQL as the database, Swagger for the documentation of the methods and finally JUnit and Mockito for Unit tests.
 
 ## Packages
