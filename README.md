@@ -66,6 +66,7 @@ To run the project locally, follow these steps:
 1. Clone the repository to your local machine.
 2. Configure your database settings in the `application.properties` file.
 3. Build and run the application.
+4. Use http://localhost:8080/swagger-ui/index.html#/ and check out the api documentation with swagger (the port might differ).
 
 ## Contributing
 
