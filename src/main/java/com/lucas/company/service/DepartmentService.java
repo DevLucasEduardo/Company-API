@@ -60,7 +60,7 @@ public class DepartmentService {
             departmentRepository.delete(departmentVerifier.get());
             return ResponseEntity.status(HttpStatus.OK).body("Department deleted!");
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Department not found!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Department not found!");
     }
 
     public Department converterDTO(DepartmentDTO departmentDTO) {

@@ -48,7 +48,7 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("This CPF has already been used!");
         }
         if(departmentVerifier.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("The department's id doesn't exist!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The department's id doesn't exist!");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(new EmployeeDTO(employeeRepository.save(employee)));
     }
@@ -59,7 +59,7 @@ public class EmployeeService {
         var departmentVerifier = departmentRepository.findById(employee.getDepartment().getId());
 
         if (departmentVerifier.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("The department's id doesn't exist!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The department's id doesn't exist!");
         }
         if (employeeVerifier.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(new EmployeeDTO(employeeRepository.save(employee)));
@@ -74,7 +74,7 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.OK).body("Employee deleted!");
 
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Employee not found!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found!");
     }
     public Employee converterDTO(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
